@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 
-const QuestionCard = ({ question, answers, votedAnswers, onVote }) => {
+const QuestionCard = ({
+  question,
+  answers,
+  votedAnswers,
+  onVote,
+  user,
+  onDeleteQuestion,
+}) => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -18,6 +25,12 @@ const QuestionCard = ({ question, answers, votedAnswers, onVote }) => {
 
   const getTotalVotes = (answerList) => {
     return answerList.reduce((total, answer) => total + answer.votes, 0);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this question?")) {
+      onDeleteQuestion(question.id);
+    }
   };
 
   return (
@@ -77,15 +90,26 @@ const QuestionCard = ({ question, answers, votedAnswers, onVote }) => {
             </div>
           )}
 
-          {/* Metadata */}
+          {/* Metadata and Delete Button */}
           <div className="flex items-center justify-between text-sm text-gray-500">
             <span>Asked {formatDate(question.createdAt)}</span>
-            <Link
-              to={`/question/${question.id}`}
-              className="text-blue-600 hover:text-blue-700 font-medium"
-            >
-              View details →
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                to={`/question/${question.id}`}
+                className="text-blue-600 hover:text-blue-700 font-medium"
+              >
+                View details →
+              </Link>
+              {user && user.username === question.author && (
+                <button
+                  onClick={handleDelete}
+                  className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs font-semibold"
+                  title="Delete this question"
+                >
+                  Delete
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

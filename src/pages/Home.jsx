@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import QuestionCard from "../components/QuestionCard";
+import { useUser } from "../contexts/UserContext";
 
-const Home = ({ questions, answers, votedAnswers, onVote, searchQuery }) => {
+const Home = ({
+  questions,
+  answers,
+  votedAnswers,
+  onVote,
+  searchQuery,
+  onDeleteQuestion,
+}) => {
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [allTags, setAllTags] = useState([]);
+  const { user } = useUser();
 
   // Extract all unique tags from questions
   useEffect(() => {
@@ -110,6 +119,8 @@ const Home = ({ questions, answers, votedAnswers, onVote, searchQuery }) => {
               )}
               votedAnswers={votedAnswers}
               onVote={onVote}
+              user={user}
+              onDeleteQuestion={onDeleteQuestion}
             />
           ))
         )}

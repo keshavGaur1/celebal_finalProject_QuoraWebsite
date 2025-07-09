@@ -15,7 +15,13 @@ import {
 } from "./utils/sampleData";
 
 function PrivateRoute({ children }) {
-  const { user } = useUser();
+  const { user, loading } = useUser();
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   if (!user) {
     window.location.href = "/login";
     return null;
@@ -127,57 +133,60 @@ function App() {
     }
   };
 
+  const handleDeleteQuestion = (questionId) => {
+    setQuestions((prev) => prev.filter((q) => q.id !== questionId));
+  };
+
   return (
     <ThemeProvider>
-      <UserProvider>
-        <Router>
-          <div className="min-h-screen transition-colors duration-200">
-            <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-            <main className="container mx-auto px-4 py-8">
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route
-                  path="/"
-                  element={
-                    <PrivateRoute>
-                      <Home
-                        questions={questions}
-                        answers={answers}
-                        votedAnswers={votedAnswers}
-                        onVote={handleVote}
-                        searchQuery={searchQuery}
-                      />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/ask"
-                  element={
-                    <PrivateRoute>
-                      <AskQuestion onAddQuestion={addQuestion} />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/question/:id"
-                  element={
-                    <PrivateRoute>
-                      <QuestionDetails
-                        questions={questions}
-                        answers={answers}
-                        votedAnswers={votedAnswers}
-                        onAddAnswer={addAnswer}
-                        onVote={handleVote}
-                      />
-                    </PrivateRoute>
-                  }
-                />
-              </Routes>
-            </main>
-          </div>
-        </Router>
-      </UserProvider>
+      <Router>
+        <div className="min-h-screen transition-colors duration-200">
+          <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+          <main className="container mx-auto px-4 py-8">
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <Home
+                      questions={questions}
+                      answers={answers}
+                      votedAnswers={votedAnswers}
+                      onVote={handleVote}
+                      searchQuery={searchQuery}
+                      onDeleteQuestion={handleDeleteQuestion}
+                    />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/ask"
+                element={
+                  <PrivateRoute>
+                    <AskQuestion onAddQuestion={addQuestion} />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/question/:id"
+                element={
+                  <PrivateRoute>
+                    <QuestionDetails
+                      questions={questions}
+                      answers={answers}
+                      votedAnswers={votedAnswers}
+                      onAddAnswer={addAnswer}
+                      onVote={handleVote}
+                    />
+                  </PrivateRoute>
+                }
+              />
+            </Routes>
+          </main>
+        </div>
+      </Router>
     </ThemeProvider>
   );
 }

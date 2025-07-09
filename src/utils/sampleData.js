@@ -7,6 +7,7 @@ export const sampleQuestions = [
     tags: ["react", "javascript", "frontend", "beginners"],
     createdAt: "2024-01-15T10:30:00.000Z",
     image: "/pic1.png",
+    author: "demo",
   },
   {
     id: "2",
@@ -16,6 +17,7 @@ export const sampleQuestions = [
     tags: ["react", "hooks", "usestate", "useeffect"],
     createdAt: "2024-01-14T15:45:00.000Z",
     image: null,
+    author: "demo",
   },
   {
     id: "3",
@@ -25,6 +27,7 @@ export const sampleQuestions = [
     tags: ["tailwind", "css", "responsive", "design"],
     createdAt: "2024-01-13T09:20:00.000Z",
     image: "/pic2.png",
+    author: "demo",
   },
   {
     id: "4",
@@ -34,6 +37,7 @@ export const sampleQuestions = [
     tags: ["react", "authentication", "firebase", "security"],
     createdAt: "2024-01-12T14:15:00.000Z",
     image: null,
+    author: "demo",
   },
   {
     id: "5",
@@ -43,6 +47,7 @@ export const sampleQuestions = [
     tags: ["javascript", "frameworks", "react", "vue", "angular"],
     createdAt: "2024-01-11T11:00:00.000Z",
     image: "/pic3.png",
+    author: "demo",
   },
   {
     id: "6",
@@ -52,6 +57,7 @@ export const sampleQuestions = [
     tags: ["performance", "optimization", "web", "speed"],
     createdAt: "2024-01-10T16:30:00.000Z",
     image: null,
+    author: "demo",
   },
   {
     id: "7",
@@ -61,6 +67,7 @@ export const sampleQuestions = [
     tags: ["typescript", "javascript", "learning", "development"],
     createdAt: "2024-01-09T13:45:00.000Z",
     image: null,
+    author: "demo",
   },
   {
     id: "8",
@@ -70,6 +77,7 @@ export const sampleQuestions = [
     tags: ["react", "deployment", "hosting", "production"],
     createdAt: "2024-01-08T08:15:00.000Z",
     image: null,
+    author: "demo",
   },
 ];
 

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
 const AskQuestion = ({ onAddQuestion }) => {
   const navigate = useNavigate();
+  const { user } = useUser();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -46,6 +48,7 @@ const AskQuestion = ({ onAddQuestion }) => {
         description: formData.description.trim(),
         tags: tags,
         image: image || null,
+        author: user?.username || "",
       };
 
       onAddQuestion(question);
