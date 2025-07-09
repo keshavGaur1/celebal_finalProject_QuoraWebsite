@@ -1,15 +1,27 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { UserProvider, useUser } from "./contexts/UserContext";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import AskQuestion from "./pages/AskQuestion";
 import QuestionDetails from "./pages/QuestionDetails";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 import {
   initializeSampleData,
   sampleQuestions,
   sampleAnswers,
 } from "./utils/sampleData";
+
+function PrivateRoute({ children }) {
+  const { user } = useUser();
+  if (!user) {
+    window.location.href = "/login";
+    return null;
+  }
+  return children;
+}
 
 function App() {
   const [questions, setQuestions] = useState([]);
@@ -117,43 +129,55 @@ function App() {
 
   return (
     <ThemeProvider>
-      <Router>
-        <div className="min-h-screen transition-colors duration-200">
-          <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-          <main className="container mx-auto px-4 py-8">
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <Home
-                    questions={questions}
-                    answers={answers}
-                    votedAnswers={votedAnswers}
-                    onVote={handleVote}
-                    searchQuery={searchQuery}
-                  />
-                }
-              />
-              <Route
-                path="/ask"
-                element={<AskQuestion onAddQuestion={addQuestion} />}
-              />
-              <Route
-                path="/question/:id"
-                element={
-                  <QuestionDetails
-                    questions={questions}
-                    answers={answers}
-                    votedAnswers={votedAnswers}
-                    onAddAnswer={addAnswer}
-                    onVote={handleVote}
-                  />
-                }
-              />
-            </Routes>
-          </main>
-        </div>
-      </Router>
+      <UserProvider>
+        <Router>
+          <div className="min-h-screen transition-colors duration-200">
+            <Navbar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
+            <main className="container mx-auto px-4 py-8">
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route
+                  path="/"
+                  element={
+                    <PrivateRoute>
+                      <Home
+                        questions={questions}
+                        answers={answers}
+                        votedAnswers={votedAnswers}
+                        onVote={handleVote}
+                        searchQuery={searchQuery}
+                      />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/ask"
+                  element={
+                    <PrivateRoute>
+                      <AskQuestion onAddQuestion={addQuestion} />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/question/:id"
+                  element={
+                    <PrivateRoute>
+                      <QuestionDetails
+                        questions={questions}
+                        answers={answers}
+                        votedAnswers={votedAnswers}
+                        onAddAnswer={addAnswer}
+                        onVote={handleVote}
+                      />
+                    </PrivateRoute>
+                  }
+                />
+              </Routes>
+            </main>
+          </div>
+        </Router>
+      </UserProvider>
     </ThemeProvider>
   );
 }
