@@ -10,6 +10,7 @@ const Home = ({
   onVote,
   searchQuery,
   onDeleteQuestion,
+  onEditQuestion,
 }) => {
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [allTags, setAllTags] = useState([]);
@@ -121,6 +122,7 @@ const Home = ({
               onVote={onVote}
               user={user}
               onDeleteQuestion={onDeleteQuestion}
+              onEditQuestion={onEditQuestion}
             />
           ))
         )}
