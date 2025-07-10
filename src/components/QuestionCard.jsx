@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const QuestionCard = ({
@@ -7,12 +8,19 @@ const QuestionCard = ({
   onVote,
   user,
   onDeleteQuestion,
+  onEditQuestion,
 }) => {
+  const [editing, setEditing] = useState(false);
+  const [editData, setEditData] = useState({
+    title: question.title,
+    description: question.description,
+    tags: question.tags ? question.tags.join(", ") : "",
+  });
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now - date) / (1000 * 60 * 60));
-
     if (diffInHours < 1) {
       return "Just now";
     } else if (diffInHours < 24) {
@@ -32,6 +40,76 @@ const QuestionCard = ({
       onDeleteQuestion(question.id);
     }
   };
+
+  const handleEdit = () => {
+    setEditing(true);
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    onEditQuestion({
+      ...question,
+      title: editData.title,
+      description: editData.description,
+      tags: editData.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
+    });
+    setEditing(false);
+  };
+
+  if (editing) {
+    return (
+      <div className="card p-4 sm:p-6">
+        <form onSubmit={handleEditSubmit} className="space-y-4">
+          <input
+            name="title"
+            value={editData.title}
+            onChange={handleEditChange}
+            className="input-field dark:bg-gray-800 dark:text-gray-100"
+            required
+            minLength={10}
+            placeholder="Title"
+          />
+          <textarea
+            name="description"
+            value={editData.description}
+            onChange={handleEditChange}
+            className="input-field dark:bg-gray-800 dark:text-gray-100"
+            required
+            minLength={20}
+            placeholder="Description"
+            rows={4}
+          />
+          <input
+            name="tags"
+            value={editData.tags}
+            onChange={handleEditChange}
+            className="input-field dark:bg-gray-800 dark:text-gray-100"
+            placeholder="Tags (comma separated)"
+          />
+          <div className="flex gap-2">
+            <button type="submit" className="btn-primary">
+              Save
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => setEditing(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="card hover:shadow-md transition-shadow duration-200 p-4 sm:p-6">
@@ -90,7 +168,7 @@ const QuestionCard = ({
             </div>
           )}
 
-          {/* Metadata and Delete Button */}
+          {/* Metadata and Edit/Delete Buttons */}
           <div className="flex items-center justify-between text-sm text-gray-500">
             <span>Asked {formatDate(question.createdAt)}</span>
             <div className="flex items-center gap-2">
@@ -101,13 +179,22 @@ const QuestionCard = ({
                 View details →
               </Link>
               {user && user.username === question.author && (
-                <button
-                  onClick={handleDelete}
-                  className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs font-semibold"
-                  title="Delete this question"
-                >
-                  Delete
-                </button>
+                <>
+                  <button
+                    onClick={handleEdit}
+                    className="ml-2 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors text-xs font-semibold"
+                    title="Edit this question"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="ml-2 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-xs font-semibold"
+                    title="Delete this question"
+                  >
+                    Delete
+                  </button>
+                </>
               )}
             </div>
           </div>

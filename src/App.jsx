@@ -137,6 +137,22 @@ function App() {
     setQuestions((prev) => prev.filter((q) => q.id !== questionId));
   };
 
+  const editQuestion = (updatedQuestion) => {
+    setQuestions((prev) =>
+      prev.map((q) =>
+        q.id === updatedQuestion.id ? { ...q, ...updatedQuestion } : q
+      )
+    );
+  };
+
+  const editAnswer = (updatedAnswer) => {
+    setAnswers((prev) =>
+      prev.map((a) =>
+        a.id === updatedAnswer.id ? { ...a, ...updatedAnswer } : a
+      )
+    );
+  };
+
   return (
     <ThemeProvider>
       <Router>
@@ -157,6 +173,7 @@ function App() {
                       onVote={handleVote}
                       searchQuery={searchQuery}
                       onDeleteQuestion={handleDeleteQuestion}
+                      onEditQuestion={editQuestion}
                     />
                   </PrivateRoute>
                 }
@@ -179,6 +196,8 @@ function App() {
                       votedAnswers={votedAnswers}
                       onAddAnswer={addAnswer}
                       onVote={handleVote}
+                      onEditQuestion={editQuestion}
+                      onEditAnswer={editAnswer}
                     />
                   </PrivateRoute>
                 }
